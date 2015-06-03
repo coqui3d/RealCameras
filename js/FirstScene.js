@@ -27,7 +27,8 @@ function init() {
 	var group = new THREE.Object3D();
 	
 	loader.load('../Resources/TestHuman.obj','../Resources/TestHuman.mtl',function (obj){
-		//making each indviual model just change thses vars to change how many and spacing
+		//making each indviual model just change thses vars to change how many to load and spacing
+		//between them
 		var howmany = 5;
 		var xspace = 3;
 		var zspace = 2;	
@@ -64,13 +65,20 @@ function init() {
 	var plane = new THREE.Mesh(geometry, material);
 	//wall
 	var back = new THREE.Mesh(geometry,material);
+	var walll = new THREE.Mesh(geometry, material);
+	var wallr = new THREE.Mesh(geometry, material);
 	back.position.set(0,0,-20);
 	back.rotation.x = 90 *Math.PI/180;
+	walll.position.set(-20,0,0);
+	walll.rotation.z = 90 *Math.PI/180;
+	wallr.position.set(20,0,0);
+	wallr.rotation.z = 90 *Math.PI/180;
 	
 	//add to scene
 	scene.add(plane);
 	scene.add(back);
-
+	scene.add(walll);
+	scene.add(wallr);
 	//lights
 	var hemiLight = new THREE.HemisphereLight( 0xffDDDD, 0x000000, 0.6 );
     hemiLight.position.set( 0, 500, 0 );
@@ -80,6 +88,7 @@ function init() {
 
     //TODO: Add gui here
 
+    //Controls
     var controls = new THREE.PointerLockControls(camera);
 	controls.enabled = true;
 	scene.add(controls.getObject());
