@@ -1,0 +1,65 @@
+newmtl baseMeshSG
+illum 4
+Kd 0.84 0.64 0.52
+Ka 0.20 0.20 0.20
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.30 0.30 0.30
+Ns 18.00
+newmtl eyebrow001MeshSG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.20 0.20 0.20
+Tf 1.00 1.00 1.00
+map_Kd eyebrow001.png
+Ni 1.00
+Ks 0.00 0.00 0.00
+Ns 18.00
+newmtl jeans01MeshSG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.20 0.20 0.20
+Tf 1.00 1.00 1.00
+map_Kd jeans_basic_diffuse.png
+bump jeans01_normals.png
+Ni 1.00
+Ks 0.03 0.03 0.03
+Ns 18.00
+newmtl lowFBXASC045polyMeshSG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.20 0.20 0.20
+Tf 1.00 1.00 1.00
+map_Kd green_eye.png
+Ni 1.00
+Ks 1.00 1.00 1.00
+Ns 18.00
+newmtl mhair02MeshSG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.20 0.20 0.20
+Tf 1.00 1.00 1.00
+map_Kd male02_diffuse_black.png
+Ni 1.00
+Ks 0.05 0.05 0.05
+Ns 18.00
+newmtl shoes01_lresMeshSG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.20 0.20 0.20
+Tf 1.00 1.00 1.00
+map_Kd classicshoes_texture_diffuse_black.png
+bump classicshoes_texture_normals.png
+Ni 1.00
+Ks 0.28 0.28 0.28
+Ns 18.00
+newmtl tshirt02MeshSG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.20 0.20 0.20
+Tf 1.00 1.00 1.00
+map_Kd tshirt02_texture.png
+bump tshirt02_normals.png
+Ni 1.00
+Ks 0.03 0.03 0.03
+Ns 18.00
