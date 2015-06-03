@@ -16,8 +16,7 @@ function init() {
 	//create scene and camera
 	scene = new THREE.Scene();
 	camera = new THREE.PerspectiveCamera(45, canvasRatio, 1, 1000);
-	camera.rotation.x = -25.5;
-	camera.position.set(0,9,0);
+	camera.position.set(0,0,0);
 
 	//load character and use a loop to place each character a set amount of spaces 
 	//for the other ones, then place all models in a object 3D so that you can move them all
@@ -45,6 +44,12 @@ function init() {
 	});
 	//adding whole group(can change position of group here)
 	scene.add(group);
+
+	var box = new THREE.BoxGeometry(1,1,1);
+	var unitbox = new THREE.Mesh(box, new THREE.MeshPhongMaterial({color: 0xFF0000}));
+	unitbox.position.set(-0.5,0.5,-10.5);
+	scene.add(unitbox);
+
 
 	//create wall and ground
 	var geometry = new THREE.BoxGeometry(40,0.1,40);
@@ -75,6 +80,11 @@ function init() {
 
     //TODO: Add gui here
 
+    var controls = new THREE.PointerLockControls(camera);
+	controls.enabled = true;
+	scene.add(controls.getObject());
+
+
 }
 
 //function to increase and descrease the size as window changes
@@ -89,6 +99,7 @@ function onWindowResize() {
 	renderer.setSize( window.innerWidth, window.innerHeight );
 
 }
+
 
 //animate
 function animate(){
