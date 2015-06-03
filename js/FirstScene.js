@@ -46,6 +46,7 @@ function init() {
 	//adding whole group(can change position of group here)
 	scene.add(group);
 
+	//create unit box to test size of humans
 	var box = new THREE.BoxGeometry(1,1,1);
 	var unitbox = new THREE.Mesh(box, new THREE.MeshPhongMaterial({color: 0xFF0000}));
 	unitbox.position.set(-0.5,0.5,-10.5);
@@ -61,24 +62,37 @@ function init() {
 	texture.repeat.set(20,20);
 
 	var material = new THREE.MeshLambertMaterial({map: texture});
-	//ground
-	var plane = new THREE.Mesh(geometry, material);
-	//wall
-	var back = new THREE.Mesh(geometry,material);
-	var walll = new THREE.Mesh(geometry, material);
-	var wallr = new THREE.Mesh(geometry, material);
-	back.position.set(0,0,-20);
-	back.rotation.x = 90 *Math.PI/180;
-	walll.position.set(-20,0,0);
-	walll.rotation.z = 90 *Math.PI/180;
-	wallr.position.set(20,0,0);
-	wallr.rotation.z = 90 *Math.PI/180;
+
+	//create floor and walls
+	var cube = new THREE.Object3D();
+	for (var i=0; i<4; i++){
+		var plane = new THREE.Mesh(geometry, material);
+		switch(i){
+			case 0:
+				//floor
+				break;
+			case 1:
+				//back wall
+				plane.position.set(0,0,-20);
+				plane.rotation.x = 90 *Math.PI/180;
+				break;
+			case 2:
+				//left side
+				plane.position.set(-20,0,0);
+				plane.rotation.z = 90 *Math.PI/180;
+				break;
+			case 3:
+				//right side
+				plane.position.set(20,0,0);
+				plane.rotation.z = 90 *Math.PI/180;
+				break;
+		}
+		cube.add(plane);
+	}
 	
 	//add to scene
-	scene.add(plane);
-	scene.add(back);
-	scene.add(walll);
-	scene.add(wallr);
+	scene.add(cube);
+
 	//lights
 	var hemiLight = new THREE.HemisphereLight( 0xffDDDD, 0x000000, 0.6 );
     hemiLight.position.set( 0, 500, 0 );
