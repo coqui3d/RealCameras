@@ -101,6 +101,63 @@ function init() {
     window.addEventListener( 'resize', onWindowResize, false );
 
     //TODO: Add gui here
+    //variables used in gui
+    var gui, camfolder, lenfolder, userfolder, cam;
+ 
+ 	var params = {
+ 		format: '16mm',
+ 		focallen: 100,
+    	horsize: 4.22,
+    	versize: 5.68,
+    	circleofconf:0.001,
+    	focusdis:100,
+    	aperture:1
+    };
+
+    //make gui here
+	gui=new dat.GUI();
+
+    camfolder= gui.addFolder('Camera');
+    $.getJSON("./Json/data.json", function(data) {
+ 		var listcams =[];
+ 		var ind= [];
+ 		$.each(data, function(name, value){
+ 			$.each(value, function(index, innervalue){
+ 		 		listcams.push(innervalue.format);
+ 			 });
+ 		});
+ 		cam=camfolder.add(params, 'format', listcams);
+ 		cam.onChange(function(value){
+  			var i = listcams.indexOf(value);
+  			params.horsize = data.cameras[i].Dimensions[1];
+  			params.versize = data.cameras[i].Dimensions[0];
+  			params.circleofconf = data.cameras[i].circleofconf;
+  		});
+	});
+	camfolder.open();
+
+	lenfolder=gui.addFolder('Lens');
+	foc = lenfolder.add(params, 'focallen',10,500).step(10).name('focal length');
+	foc.onChange(function(value){
+		params.focallen = value;
+	});
+	lenfolder.open();
+
+	userfolder=gui.addFolder('User');
+	dis = userfolder.add(params, 'focusdis',100,200).step(20).name("distance");
+	dis.onChange(function(value){
+		params.focusdis = value;
+	});
+	apt = userfolder.add(params, 'aperture',1,22).step(1);
+	apt.onChange(function(value) {
+		params.aperture = value;
+	});
+	userfolder.open();
+
+	var obj = {Submit:function(){
+		alert();
+	}};  
+	gui.add(obj, 'Submit');
 
     //Controls
     var controls = new THREE.PointerLockControls(camera);
