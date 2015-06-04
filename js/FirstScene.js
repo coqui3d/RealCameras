@@ -106,12 +106,12 @@ function init() {
  
  	var params = {
  		format: '16mm',
- 		focallen: 100,
-    	horsize: 4.22,
-    	versize: 5.68,
-    	circleofconf:0.001,
-    	focusdis:100,
-    	aperture:1
+ 		focallen: 10,
+    	horsize: 10.26,
+    	versize: 7.49,
+    	circleofconf:0.0127,
+    	focusdis:10,
+    	aperture: 8
     };
 
     //make gui here
@@ -129,9 +129,10 @@ function init() {
  		cam=camfolder.add(params, 'format', listcams);
  		cam.onChange(function(value){
   			var i = listcams.indexOf(value);
-  			params.horsize = data.cameras[i].Dimensions[1];
-  			params.versize = data.cameras[i].Dimensions[0];
+  			params.horsize = data.cameras[i].Dimensions[0];
+  			params.versize = data.cameras[i].Dimensions[1];
   			params.circleofconf = data.cameras[i].circleofconf;
+  			alert(params.circleofconf);
   		});
 	});
 	camfolder.open();
@@ -144,7 +145,7 @@ function init() {
 	lenfolder.open();
 
 	userfolder=gui.addFolder('User');
-	dis = userfolder.add(params, 'focusdis',100,200).step(20).name("distance");
+	dis = userfolder.add(params, 'focusdis',10,500).step(20).name("distance");
 	dis.onChange(function(value){
 		params.focusdis = value;
 	});
@@ -155,7 +156,38 @@ function init() {
 	userfolder.open();
 
 	var obj = {Submit:function(){
-		alert();
+		var verticalfieldofview = 2*(Math.atan(0.5*params.versize/params.focallen));
+		verticalfieldofview = (verticalfieldofview*180/Math.PI).toFixed(2);
+
+		var horzfieldofview = 2*(Math.atan(0.5*params.horsize/params.focallen));
+		horzfieldofview = (horzfieldofview*180/Math.PI).toFixed(2);
+	
+		alert("The Vertical angle of view is " + verticalfieldofview +" degrees \n" 
+			+ "The Horizontial angle of view is " + horzfieldofview + " degrees");
+
+		var hyper = ((Math.pow(params.focallen,2))/(params.aperture*params.circleofconf)) + params.focallen;
+		hyper = hyper/1000;
+
+		var near;
+		var far;
+		if (params.focusdis >= hyper){
+			far = "infinity";
+			near = (hyper/2).toFixed(2);
+		}
+		else {
+			near = ((hyper*params.focusdis)/(hyper + (params.focusdis - (params.focallen)/1000))).toFixed(2);
+			far = ((hyper*params.focusdis)/(hyper - (params.focusdis - (params.focallen)/1000))).toFixed(2);
+		}
+		alert ("The near depth of field is "+ near + " meters \n"
+				+ "The far depth of field is "+ far + " meters");
+		var total;
+		if (far == "infinity"){
+			total = "infinity";
+		}
+		else {
+			total = (far - near).toFixed(2);
+		}
+		alert("The total depth is " + total + " meters");
 	}};  
 	gui.add(obj, 'Submit');
 
