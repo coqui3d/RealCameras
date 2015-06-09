@@ -132,7 +132,6 @@ function init() {
   			params.horsize = data.cameras[i].Dimensions[0];
   			params.versize = data.cameras[i].Dimensions[1];
   			params.circleofconf = data.cameras[i].circleofconf;
-  			alert(params.circleofconf);
   		});
 	});
 	camfolder.open();
