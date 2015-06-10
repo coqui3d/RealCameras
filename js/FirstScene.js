@@ -2,6 +2,7 @@
 //variables
 var container, canvas;
 var camera, scene, renderer;
+var postprocessing ={};
 
 function init() {
 
@@ -16,7 +17,7 @@ function init() {
 	//create scene and camera
 	scene = new THREE.Scene();
 	camera = new THREE.PerspectiveCamera(45, canvasRatio, 1, 1000);
-	camera.position.set(0,0,0);
+	camera.position.set(0,20,0);
 
 	//load character and use a loop to place each character a set amount of spaces 
 	//for the other ones, then place all models in a object 3D so that you can move them all
@@ -33,7 +34,7 @@ function init() {
 		var xspace = 3;
 		var zspace = 2;	
 		var xstart = -5;
-		var zstart = -10;
+		var zstart = 0;
 
 		for (var i=0; i<howmany; i++){
 			var person = obj.clone();
@@ -100,7 +101,8 @@ function init() {
 
     window.addEventListener( 'resize', onWindowResize, false );
 
-    //TODO: Add gui here
+   initPostprocessing();
+
     //variables used in gui
     var gui, camfolder, lenfolder, userfolder, cam;
  
@@ -113,6 +115,15 @@ function init() {
     	focusdis:10,
     	aperture: 8
     };
+
+    var Changer = function(){
+    	postprocessing.boken.uniforms["focallen"].value = params.focallen;
+    	postprocessing.boken.uniforms["aperture"].value = params.aperture;
+    	postprocessing.boken.uniforms["coc"].value = params.circleofconf;
+    	postprocessing.boken.uniforms["focusdis"].value = params.focusdis;
+//add here
+    }
+
 
     //make gui here
 	gui=new dat.GUI();
@@ -132,7 +143,9 @@ function init() {
   			params.horsize = data.cameras[i].Dimensions[0];
   			params.versize = data.cameras[i].Dimensions[1];
   			params.circleofconf = data.cameras[i].circleofconf;
-  		});
+  			}
+  			Changer();
+  			);
 	});
 	camfolder.open();
 
@@ -140,18 +153,24 @@ function init() {
 	foc = lenfolder.add(params, 'focallen',10,500).step(10).name('focal length');
 	foc.onChange(function(value){
 		params.focallen = value;
-	});
+		}
+		Changer();
+		);
 	lenfolder.open();
 
 	userfolder=gui.addFolder('User');
 	dis = userfolder.add(params, 'focusdis',10,500).step(20).name("distance");
 	dis.onChange(function(value){
 		params.focusdis = value;
-	});
+		}
+		Changer();
+		);
 	apt = userfolder.add(params, 'aperture',1,22).step(1);
 	apt.onChange(function(value) {
 		params.aperture = value;
-	});
+	}
+		Changer();
+		);
 	userfolder.open();
 
 	var obj = {Submit:function(){
@@ -190,10 +209,9 @@ function init() {
 	}};  
 	gui.add(obj, 'Submit');
 
-    //Controls
-    var controls = new THREE.PointerLockControls(camera);
-	controls.enabled = true;
-	scene.add(controls.getObject());
+     //Controls
+    var controls = new THREE.OrbitControls(camera, renderer.domElement);
+
 
 
 }
@@ -208,9 +226,32 @@ function onWindowResize() {
 	camera.updateProjectionMatrix();
 
 	renderer.setSize( window.innerWidth, window.innerHeight );
+	postprocessing.composer.setSize(window.innerWidth, window.innerHeight);
 
 }
 
+function initPostprocessing(){
+	var renderPass = new THREE.RenderPass(scene, camera);
+
+	var TestShaderPass = new THREE.BokenPass(scene, camera, {
+//ADD HERE
+		focallen: 100,
+		aperture: 1.8;
+		coc: 0.001;
+		focusdis: 12;
+
+	});
+
+	TestShaderPass.renderToScreen = true;
+
+	var composer = new THREE.EffectComposer(renderer);
+
+	composer.addPass(renderPass);
+	composer.addPass(TestShaderPass);
+
+	postprocessing.composer = composer;
+	postprocessing.boken = TestShaderPass;
+}
 
 //animate
 function animate(){
@@ -220,7 +261,8 @@ function animate(){
 
 //render
 function render(){
-	renderer.render(scene,camera);
+	//renderer.render(scene,camera);
+	postprocessing.composer.render(0.1);
 }
 
 	init();
