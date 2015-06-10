@@ -29,17 +29,11 @@ THREE.TestShader = {
 		"uniform float dnear;",
 		"uniform float dfar;",
 
-		"float shift (vec4 text){",
-			"const vec4 bitshifts = vec4(1.0/(256.0*256.0*256.0),",
-									"1.0/(256.0*256.0),",
-									"1.0/256.0,",
-									"1.0);",
-			"return dot(text, bitshifts);",
-		"}",
+		
 		"void main() {",
 
-			"float depth = shift(texture2D(tDepth, vUv));",
-			"//float zdist = (znear *zfar)/(zfar - depth * (zfar- znear));",
+			"float depth = texture2D(tDepth, vUv.xy).x;",
+			"float zdist = (znear *zfar)/(zfar - depth * (zfar- znear));",
 			
 			"//float[3][3] kernel;",
 			"//kernel[-1][1]=1.0/16.0; kernel[0][1]=2.0/16.0; kernel[1][1]=1.0/16.0;",
