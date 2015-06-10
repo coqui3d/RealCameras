@@ -117,10 +117,27 @@ function init() {
     };
 
     var Changer = function(){
-    	postprocessing.boken.uniforms["focallen"].value = params.focallen;
-    	postprocessing.boken.uniforms["aperture"].value = params.aperture;
-    	postprocessing.boken.uniforms["coc"].value = params.circleofconf;
-    	postprocessing.boken.uniforms["focusdis"].value = params.focusdis;
+    	var hyper = ((Math.pow(params.focallen,2))/(params.aperture*params.circleofconf)) + params.focallen;
+		hyper = hyper/1000;
+
+		console.log(hyper);
+		var near;
+		var far;
+		if (params.focusdis >= hyper){
+		far = 100000.0;
+		near = (hyper/2).toFixed(2);
+		}
+		else {
+		near = ((hyper*params.focusdis)/(hyper + (params.focusdis - (params.focallen)/1000))).toFixed(2);
+		far = ((hyper*params.focusdis)/(hyper - (params.focusdis - (params.focallen)/1000))).toFixed(2);
+		}
+
+		console.log("NEar" + near);
+		console.log("far" + far);
+    	postprocessing.boken.uniforms["dfar"].value = far;
+    	postprocessing.boken.uniforms["dnear"].value = near;
+
+    	
 //add here
     }
 
@@ -143,9 +160,8 @@ function init() {
   			params.horsize = data.cameras[i].Dimensions[0];
   			params.versize = data.cameras[i].Dimensions[1];
   			params.circleofconf = data.cameras[i].circleofconf;
-  			}
-  			Changer();
-  			);
+  	//		Changer();
+  			});
 	});
 	camfolder.open();
 
@@ -153,24 +169,21 @@ function init() {
 	foc = lenfolder.add(params, 'focallen',10,500).step(10).name('focal length');
 	foc.onChange(function(value){
 		params.focallen = value;
-		}
 		Changer();
-		);
+		});
 	lenfolder.open();
 
 	userfolder=gui.addFolder('User');
 	dis = userfolder.add(params, 'focusdis',10,500).step(20).name("distance");
 	dis.onChange(function(value){
 		params.focusdis = value;
-		}
 		Changer();
-		);
+		});
 	apt = userfolder.add(params, 'aperture',1,22).step(1);
 	apt.onChange(function(value) {
 		params.aperture = value;
-	}
 		Changer();
-		);
+	});
 	userfolder.open();
 
 	var obj = {Submit:function(){
@@ -233,12 +246,12 @@ function onWindowResize() {
 function initPostprocessing(){
 	var renderPass = new THREE.RenderPass(scene, camera);
 
-	var TestShaderPass = new THREE.BokenPass(scene, camera, {
+	var TestShaderPass = new THREE.BokehPass(scene, camera, {
 //ADD HERE
 		focallen: 100,
-		aperture: 1.8;
-		coc: 0.001;
-		focusdis: 12;
+		aperture: 1.8,
+		coc: 0.001,
+		focusdis: 12,
 
 	});
 
