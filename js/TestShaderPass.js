@@ -53,6 +53,10 @@ THREE.BokehPass = function ( scene, camera, params ) {
 //ADD HERE
 	bokehUniforms[ "tDepth" ].value = this.renderTargetDepth;
 
+	bokehUniforms["textureWidth"].value = width;
+	bokehUniforms["textureHeight"].value = height;
+
+	console.log(hyper);
 	bokehUniforms[ "dfar" ].value = far;
 	bokehUniforms[ "dnear" ].value = near;
 

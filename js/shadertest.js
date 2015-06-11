@@ -5,9 +5,11 @@ THREE.TestShader = {
 		"tColor": { type: "t", value:null},
 		"tDepth": { type: "t", value: null},
 		"znear": {type: "f", value: 1.00},
-		"zfar": {type: "f", value: 100},
+		"zfar": {type: "f", value: 1000.0},
 		"dfar": {type: "f", value: 0},
-		"dnear": {type: "f", value:0}
+		"dnear": {type: "f", value:0},
+		"textureWidth": {type: "f", value:1.0 },
+		"textureHeight": {type: "f", value:1.0}
 	},
 
 	vertexShader:[
@@ -28,35 +30,39 @@ THREE.TestShader = {
 		"uniform float zfar;",
 		"uniform float dnear;",
 		"uniform float dfar;",
+		"uniform float textureWidth;",
+		"uniform float textureHeight;",
 
 		
 		"void main() {",
 
-			"float depth = texture2D(tDepth, vUv.xy).x;",
-			"float zdist = (znear *zfar)/(zfar - depth * (zfar- znear));",
+			"float depthb = texture2D(tDepth, vUv).x;",
+			"float depthn = 2.0 * depthb -1.0;",
+			"float depth = (2.0* znear *zfar)/(zfar +znear - depthn * (zfar- znear));",
 			
-			"//float[3][3] kernel;",
-			"//kernel[-1][1]=1.0/16.0; kernel[0][1]=2.0/16.0; kernel[1][1]=1.0/16.0;",
-			"//kernel[-1][0]=2.0/16.0; kernel[0][0]=4.0/16.0; kernel[1][0]=2.0/16.0;",
-			"//kernel[-1][-1]=1.0/16.0; kernel[0][-1]=2.0/16.0; kernel[1][-1]=1.0/16.0;",
-
-			"float textelsize = 0.0;",
-			"if (depth > dfar)",
-				"textelsize = (depth -dfar)*0.2;",
-			"else if (depth < dnear)",
-				"textelsize = (dnear - depth)*0.2;",
-			"if (textelsize > (1.0/256.0))",
-				"textelsize = 1.0/256.0;",
+			"float size = 1.25;",
+			"vec2 texelsize = vec2(1.0/textureWidth, 1.0/textureHeight) * size;",
+			
+			"float kernel[9];",
+			"kernel[0]=1.0/16.0; kernel[1]=2.0/16.0; kernel[2]=1.0/16.0;",
+			"kernel[3]=2.0/16.0; kernel[4]=4.0/16.0; kernel[5]=2.0/16.0;",
+			"kernel[6]=1.0/16.0; kernel[7]=2.0/16.0; kernel[8]=1.0/16.0;",
 
 			"vec3 colour = vec3(0,0,0);",
+			"vec3 temp = vec3(0,0,0);",
 			"int count =0;",
+			"int count2 = 0;",
+
 			"for (int x=-1; x<2; x++) {",
 				"for (int y=-1; y<2; y++) {",
-					"vec2 offset = vUv + vec2(float(x), float(y))*textelsize;",
+					"vec2 offset = vUv + vec2(texelsize.x * float(x), texelsize.y * float(y));",
 					"if ( (offset.x >= 0.0) && (offset.x <= 1.0) && (offset.y >= 0.0) && (offset.y <= 1.0) ){",
-						"colour += (texture2D(tColor, offset).xyz);",
-						"//*kernel[x][y]; ",
-						"++count;",
+					
+						"//if ( (depth < dnear) || (depth > dfar) )",
+						"//{",
+							"colour += ((texture2D(tColor, offset).xyz));",
+							"++count;",
+						"//}",
 					"}",
 				"}",
 			"}",

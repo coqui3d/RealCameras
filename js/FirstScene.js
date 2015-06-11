@@ -120,7 +120,6 @@ function init() {
     	var hyper = ((Math.pow(params.focallen,2))/(params.aperture*params.circleofconf)) + params.focallen;
 		hyper = hyper/1000;
 
-		console.log(hyper);
 		var near;
 		var far;
 		if (params.focusdis >= hyper){
@@ -132,11 +131,11 @@ function init() {
 		far = ((hyper*params.focusdis)/(hyper - (params.focusdis - (params.focallen)/1000))).toFixed(2);
 		}
 
-		console.log("NEar" + near);
-		console.log("far" + far);
+		console.log("the hyper focal " + hyper);
     	postprocessing.boken.uniforms["dfar"].value = far;
     	postprocessing.boken.uniforms["dnear"].value = near;
-
+    	console.log("Far is " + far);
+    	console.log("near is " + near);
     	
 //add here
     }
