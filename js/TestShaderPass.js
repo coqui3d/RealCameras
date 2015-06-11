@@ -3,27 +3,6 @@ THREE.BokehPass = function ( scene, camera, params ) {
 	this.scene = scene;
 	this.camera = camera;
 
-//ADD HERE
-	var focallen = ( params.focallen !== undefined ) ? params.foocalen : 15.0;
-	var aperture = ( params.aperture !== undefined ) ? params.aperture : 1.8;
-	var coc = ( params.coc !== undefined ) ? params.coc : 0.001;
-	var focusdis = (params.focusdis != undefined)? params.focusdis : 20;
-
-	var hyper = ((Math.pow(focallen,2))/(aperture*coc)) + params.focallen;
-	hyper = hyper/1000;
-
-	var near;
-	var far;
-	if (focusdis >= hyper){
-		far = -1;
-		near = (hyper/2).toFixed(2);
-	}
-	else {
-		near = ((hyper*focusdis)/(hyper + (focusdis - (focallen)/1000))).toFixed(2);
-		far = ((hyper*focusdis)/(hyper - (focusdis - (focallen)/1000))).toFixed(2);
-	}
-
-
 	// render targets
 
 	var width = params.width || window.innerWidth || 1;
@@ -56,9 +35,6 @@ THREE.BokehPass = function ( scene, camera, params ) {
 	bokehUniforms["textureWidth"].value = width;
 	bokehUniforms["textureHeight"].value = height;
 
-	console.log(hyper);
-	bokehUniforms[ "dfar" ].value = far;
-	bokehUniforms[ "dnear" ].value = near;
 
 	this.materialBokeh = new THREE.ShaderMaterial({
 		uniforms: bokehUniforms,

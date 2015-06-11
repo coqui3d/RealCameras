@@ -131,11 +131,9 @@ function init() {
 		far = ((hyper*params.focusdis)/(hyper - (params.focusdis - (params.focallen)/1000))).toFixed(2);
 		}
 
-		console.log("the hyper focal " + hyper);
     	postprocessing.boken.uniforms["dfar"].value = far;
     	postprocessing.boken.uniforms["dnear"].value = near;
-    	console.log("Far is " + far);
-    	console.log("near is " + near);
+
     	
 //add here
     }
