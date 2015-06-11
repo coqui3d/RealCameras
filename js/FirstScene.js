@@ -55,41 +55,41 @@ function init() {
 
 
 	//create wall and ground
-	var geometry = new THREE.BoxGeometry(40,0.1,40);
+	var geometry = new THREE.BoxGeometry(100,0.1,100);
 
 	var texture = new THREE.ImageUtils.loadTexture("../Resources/checker.png");
 	texture.wrapS = THREE.RepeatWrapping;
 	texture.wrapT = THREE.RepeatWrapping;
-	texture.repeat.set(20,20);
+	texture.repeat.set(50,50);
 
 	var material = new THREE.MeshLambertMaterial({map: texture});
 
 	//create floor and walls
 	var cube = new THREE.Object3D();
-	for (var i=0; i<4; i++){
+//	for (var i=0; i<4; i++){
 		var plane = new THREE.Mesh(geometry, material);
-		switch(i){
-			case 0:
-				//floor
-				break;
-			case 1:
-				//back wall
-				plane.position.set(0,0,-20);
-				plane.rotation.x = 90 *Math.PI/180;
-				break;
-			case 2:
-				//left side
-				plane.position.set(-20,0,0);
-				plane.rotation.z = 90 *Math.PI/180;
-				break;
-			case 3:
-				//right side
-				plane.position.set(20,0,0);
-				plane.rotation.z = 90 *Math.PI/180;
-				break;
-		}
+		// switch(i){
+		// 	case 0:
+		// 		//floor
+		// 		break;
+		// 	case 1:
+		// 		//back wall
+		// 		plane.position.set(0,0,-20);
+		// 		plane.rotation.x = 90 *Math.PI/180;
+		// 		break;
+		// 	case 2:
+		// 		//left side
+		// 		plane.position.set(-20,0,0);
+		// 		plane.rotation.z = 90 *Math.PI/180;
+		// 		break;
+		// 	case 3:
+		// 		//right side
+		// 		plane.position.set(20,0,0);
+		// 		plane.rotation.z = 90 *Math.PI/180;
+		// 		break;
+		// }
 		cube.add(plane);
-	}
+	//}
 	
 	//add to scene
 	scene.add(cube);
@@ -132,8 +132,9 @@ function init() {
 		}
 
     	postprocessing.boken.uniforms["dfar"].value = far;
+    	console.log("The far is "+ postprocessing.boken.uniforms["dfar"].value);
     	postprocessing.boken.uniforms["dnear"].value = near;
-
+    	console.log("The near is " + postprocessing.boken.uniforms["dnear"].value);
     	
 //add here
     }
